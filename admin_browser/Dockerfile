@@ -7,7 +7,7 @@ COPY build/webauth/ ./
 RUN go mod verify && CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/webauth .
 
 FROM jlesage/firefox:v26.11.1@sha256:9b6f819004868a74a14fb1d82f4b2655a316cc99cf58c60bf41cbdb84bf8a08f AS nginx-build
-USER 0
+USER 0:0
 RUN apk upgrade --no-cache && apk add --no-cache build-base linux-headers openssl-dev pcre2-dev libseccomp-dev
 COPY build/build-nginx.sh build/*.tar.gz /build/
 RUN sh /build/build-nginx.sh
@@ -17,7 +17,7 @@ RUN cc -O2 -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE -pie -Wl,-z,relro,
 
 FROM jlesage/firefox:v26.11.1@sha256:9b6f819004868a74a14fb1d82f4b2655a316cc99cf58c60bf41cbdb84bf8a08f
 
-USER 0
+USER 0:0
 RUN apk del firefox \
     && apk upgrade --no-cache \
     && apk add --no-cache nodejs pcre2 libseccomp firefox-esr=153.7.0-r0 \
