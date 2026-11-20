@@ -1,3 +1,9 @@
+# 0.1.2
+
+- Nombre de la barra lateral abreviado a «Navegador».
+- Icono y logo propios para Home Assistant y la portada del repositorio.
+- Canal estable y documentación actualizada.
+
 # 0.1.1
 
 - Firefox ESR 153.7.0, paquetes Alpine actualizados y nginx 1.30.7.

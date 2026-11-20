@@ -4,7 +4,7 @@ Firefox remoto para abrir pfSense y otros equipos desde Home Assistant mediante
 Ingress. Incluye marcadores configurables, portapapeles manual y sincronización
 condicionada a permisos, y transferencia de archivos mediante una carpeta privada.
 
-Versión 0.1.1, para amd64. Configura `admin_user_ids` antes de abrir el panel.
+Versión 0.1.2, para amd64. Configura `admin_user_ids` antes de abrir el panel.
 Todos los usuarios autorizados comparten el mismo navegador y las mismas sesiones.
 El perfil se limpia al arrancar por defecto. Consulta DOCS.md antes de activarlo.
 
