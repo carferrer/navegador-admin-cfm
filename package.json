@@ -1,0 +1,1 @@
+{"name":"cfm-admin-browser-tests","version":"0.1.1","private":true,"type":"module","scripts":{"test":"node --test tests/config.test.mjs","test:docker":"node tests/integration.mjs"},"devDependencies":{"@msgpack/msgpack":"3.1.3","playwright":"1.58.2","ws":"8.23.0","yaml":"2.9.1"}}

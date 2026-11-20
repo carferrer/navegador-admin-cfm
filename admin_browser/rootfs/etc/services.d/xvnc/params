@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+# No TCP VNC or X11. Authentication is enforced by HA and the nginx Ingress gate.
+# Use distro TigerVNC without the upstream image's private security-type patch.
+printf '%s\n' -nolisten tcp -nolisten local -listen unix \
+  -geometry "${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}" -depth 24 \
+  -rfbport=-1 -rfbunixpath=/tmp/vnc.sock -rfbunixmode=0660 \
+  -SecurityTypes=None "-desktop=${APP_NAME}" "${DISPLAY}"
