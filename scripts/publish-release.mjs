@@ -7,6 +7,8 @@ if(!/^[a-f0-9]{40}$/.test(target||''))throw Error('Commit de publicación no vá
 const repo=GH_REPO||GITHUB_REPOSITORY;
 if(repo!=='carferrer/navegador-admin-cfm')throw Error('Repositorio de publicación inesperado.');
 const gh=(...args)=>execFileSync('gh',args,{encoding:'utf8'}).trim();
+const head=JSON.parse(gh('api',`repos/${repo}/git/ref/heads/main`)).object.sha;
+if(head!==target)throw Error('Hay cambios nuevos en main; publicar desde la ejecución más reciente.');
 const response=spawnSync('gh',['api',`repos/${repo}/releases/tags/${version}`],{encoding:'utf8'});
 if(response.status===0) {
   const release=JSON.parse(response.stdout);

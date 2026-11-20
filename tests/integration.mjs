@@ -26,6 +26,10 @@ try {
     '--shm-size','256m','--mount',`type=volume,source=${volume},target=/data`,image);
   d('cp',path.join(results,'options.test.json'),`${name}:/data/options.json`);
   d('start',name);
+  const installedFirefoxVersion=d('exec',name,'sh','-c',"apk info -v | sed -n 's/^firefox-esr-//p'");
+  const displayedFirefoxVersion=d('exec',name,'cat','/etc/cont-env.d/APP_VERSION');
+  if(!/^\d+\.\d+/.test(installedFirefoxVersion)||displayedFirefoxVersion!==installedFirefoxVersion)
+    throw Error('Firefox display version does not match its installed package');
   d('exec',name,'sh','-c','mkdir -p /data/exchange; ln -s /data/options.json /data/exchange/outside-link');
   fs.writeFileSync(path.join(results,'containers.json'),JSON.stringify({name,net,volume}));
   const r=spawnSync(docker,['run','--rm','--name',`${name}-runner`,'--network',net,'--ip','172.30.32.2',
