@@ -1,0 +1,63 @@
+name: Preparar release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Nueva versión: AAAA.MM.NN (ejemplo: 2026.11.02)'
+        type: string
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: prepare-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validar versión y generar changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/main
+          node --input-type=module -e "import {versionParts} from './scripts/release.mjs'; versionParts(process.env.VERSION)"
+          if git ls-remote --exit-code --heads origin "release/$VERSION" >/dev/null 2>&1; then
+            echo 'Ya existe una rama para esta versión.'; exit 1
+          fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f tag_name="$VERSION" -f target_commitish="$(git rev-parse HEAD)" --jq .body > "$RUNNER_TEMP/release-notes.md"
+          node scripts/release.mjs prepare "$VERSION" "$RUNNER_TEMP/release-notes.md"
+          npm test
+          node scripts/release.mjs validate
+      - name: Crear propuesta de release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "release/$VERSION"
+          git add admin_browser/config.yaml admin_browser/CHANGELOG.md README.md admin_browser/README.md
+          git commit -m "chore: preparar release $VERSION"
+          git push origin "release/$VERSION"
+          printf 'Actualiza la versión, los README y el changelog generado. Revisar las notas antes de fusionar. La publicación ejecutará CI sobre el commit fusionado.\n' > "$RUNNER_TEMP/pr-body.md"
+          gh pr create --base main --head "release/$VERSION" --title "chore: preparar release $VERSION" --body-file "$RUNNER_TEMP/pr-body.md"
+          # Events created with GITHUB_TOKEN do not trigger another PR workflow.
+          gh workflow run ci.yaml --ref "release/$VERSION"

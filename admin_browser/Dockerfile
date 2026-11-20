@@ -27,7 +27,7 @@ RUN apk del firefox \
     && rm -rf /opt/base/lib \
     && test -x /usr/bin/firefox-esr \
     && ln -sf /usr/bin/firefox-esr /usr/bin/firefox \
-    && set-cont-env APP_VERSION 153.7.0esr-r0 \
+    && set-cont-env APP_VERSION "$(apk info -v firefox-esr | sed 's/^firefox-esr-//')" \
     && mkdir -p /opt/cfm /etc/firefox/policies \
     && sed -i '/^server {/i include /opt/cfm/access-map.conf;' /opt/base/etc/nginx/default_site.conf \
     && sed -i '/^server {/a\    include /opt/cfm/access-server.conf;' /opt/base/etc/nginx/default_site.conf \

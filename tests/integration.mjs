@@ -3,7 +3,10 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {parse} from 'yaml';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const version=parse(fs.readFileSync(path.join(root,'admin_browser/config.yaml'),'utf8')).version;
+const image=`cfm-admin-browser:${version}`;
 const docker=process.env.DOCKER_BIN || (process.platform==='win32' ?
   path.join(process.env.LOCALAPPDATA,'Programs/DockerDesktop/resources/bin/docker.exe') : 'docker');
 const stamp=Date.now(), name=`cfm-test-${stamp}`, net=`${name}-net`, volume=`${name}-data`;
@@ -15,12 +18,12 @@ function d(...args){return execFileSync(docker,args,{encoding:'utf8',maxBuffer:5
 let success=false;
 try {
   console.log('Building add-on');
-  d('build','-t','cfm-admin-browser:0.1.1',path.join(root,'admin_browser'));
+  d('build',...(process.env.CFM_FRESH_BUILD==='1' ? ['--pull','--no-cache'] : []),'-t',image,path.join(root,'admin_browser'));
   d('network','create','--subnet','172.30.32.0/24',net);
   d('volume','create',volume);
   const hostSecurity=process.env.CFM_HA_SECCOMP==='1' ? ['--security-opt','seccomp=unconfined'] : [];
   d('create',...hostSecurity,'--name',name,'--network',net,'--ip','172.30.32.3','--network-alias','browser',
-    '--shm-size','256m','--mount',`type=volume,source=${volume},target=/data`,'cfm-admin-browser:0.1.1');
+    '--shm-size','256m','--mount',`type=volume,source=${volume},target=/data`,image);
   d('cp',path.join(results,'options.test.json'),`${name}:/data/options.json`);
   d('start',name);
   d('exec',name,'sh','-c','mkdir -p /data/exchange; ln -s /data/options.json /data/exchange/outside-link');
@@ -28,7 +31,7 @@ try {
   const r=spawnSync(docker,['run','--rm','--name',`${name}-runner`,'--network',net,'--ip','172.30.32.2',
     '--shm-size','256m','--mount',`type=bind,source=${root},target=/suite,readonly`,
     '--mount',`type=bind,source=${results},target=/results`,
-    '-w','/suite','mcr.microsoft.com/playwright:v1.58.2-noble','node','tests/browser-check.mjs'],
+    '-w','/suite','mcr.microsoft.com/playwright:v1.58.2-noble@sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d','node','tests/browser-check.mjs'],
     {stdio:'inherit',timeout:240000});
   if(r.status!==0) throw Error('Browser integration checks failed');
   const inspect=JSON.parse(d('inspect',name))[0];
@@ -47,7 +50,7 @@ try {
   if(content.some(p=>Number(p.seccompFilters)<=parentFilters))throw Error('Firefox content seccomp filter missing');
   fs.writeFileSync(path.join(results,'filter-self-test.txt'),d('run','--rm','--network','none',
     '--security-opt','seccomp=unconfined','--entrypoint','/opt/cfm/secure-launch',
-    'cfm-admin-browser:0.1.1','--self-test'));
+    image,'--self-test'));
   fs.writeFileSync(path.join(results,'runtime.json'),JSON.stringify({
     publishedPorts:inspect.HostConfig.PortBindings,privileged:inspect.HostConfig.Privileged,
     extraCapabilities:inspect.HostConfig.CapAdd,

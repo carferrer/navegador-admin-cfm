@@ -3,7 +3,7 @@
 <img src="admin_browser/logo.png" alt="Navegador de administración CFM" width="128" height="128">
 
 Complemento que permite abrir interfaces de administración de red
-en Firefox remoto, accesible mediante Ingress. Versión 0.1.2, arquitectura amd64.
+en Firefox remoto, accesible mediante Ingress. Versión 2026.11.01, arquitectura amd64.
 
 Incluye marcadores configurables, portapapeles de texto y transferencia de
 archivos mediante una carpeta de intercambio. Todos los usuarios autorizados
@@ -12,14 +12,9 @@ contraseñas no se guardan y los archivos de intercambio se borran al arrancar.
 
 ## Instalación
 
-Una vez publicado, añadir la URL de este repositorio a los repositorios de la
+Añadir la URL de este repositorio a los repositorios de la
 tienda de aplicaciones de Home Assistant e instalar «Navegador de administración».
 La imagen se construye en HA; se necesitan acceso a Internet y espacio libre.
-
-Mientras el repositorio sea privado, añadir su URL por sí sola no concede acceso
-a HA. Utilizar la instalación local indicada abajo o configurar y verificar
-expresamente la autenticación para el repositorio privado. No incluir credenciales
-de acceso en archivos del proyecto.
 
 Para instalación local, copiar `admin_browser` a `/addons/admin_browser_cfm`,
 comprobar actualizaciones en la tienda e instalar el complemento local.
@@ -30,6 +25,13 @@ complemento, usando direcciones sin credenciales ni tokens.
 
 Consultar [configuración y uso](admin_browser/DOCS.md),
 [cambios](admin_browser/CHANGELOG.md) y [seguridad](SECURITY.md).
+
+## Versiones y publicaciones
+
+Las versiones usan `AAAA.MM.NN` (año, mes y número de entrega). Los flujos de
+GitHub Actions preparan el changelog, ejecutan CI y publican cada versión nueva
+solo después de superar las comprobaciones. Consultar [cómo preparar y publicar
+una release](RELEASING.md).
 
 Pasar de la instalación local a una instalación desde repositorio crea otra
 identidad de complemento en HA. No asumir que se migran automáticamente las

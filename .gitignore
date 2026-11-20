@@ -10,10 +10,15 @@
 !/package-lock.json
 !/admin_browser/
 !/tests/
+!/.github/
+!/scripts/
+!/RELEASING.md
+!/renovate.json
 
 # Local dependencies, evidence, runtime state and credentials are always private.
 node_modules/
 test-results/
+dist/
 security/
 work/
 outputs/

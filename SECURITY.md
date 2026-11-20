@@ -40,7 +40,12 @@ imagen y repetir las pruebas antes de distribuirla. Consultar también los
 [avisos de Mozilla](https://www.mozilla.org/en-US/security/known-vulnerabilities/firefox-esr/)
 y [nginx](https://nginx.org/en/security_advisories.html).
 
-No hay vigilancia ni publicación automática configurada en esta preparación.
+GitHub Actions comprueba las propuestas y las publicaciones: construye la
+imagen, prueba el navegador y analiza fuentes e imagen con Trivy. Las
+vulnerabilidades HIGH/CRITICAL y los secretos detectados bloquean la release.
+El informe de imagen conserva también los hallazgos de menor gravedad.
+Consultar [el proceso de versiones](RELEASING.md). No hay vigilancia periódica
+programada; los análisis se ejecutan al cambiar el código o lanzar los flujos.
 
 ## Información que no debe publicarse
 

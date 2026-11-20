@@ -1,3 +1,13 @@
+# Versión 2026.11.01 (2026-11-20)
+
+- Inicia la numeración `AAAA.MM.NN` con la versión `2026.11.01`.
+- Mantiene el canal estable, el nombre «Navegador» en la barra lateral y el icono propio.
+- Añade CI para configuración, versiones y pruebas Docker de Ingress, WebSocket, portapapeles, transferencia de archivos, perfiles y aislamiento.
+- Analiza fuentes e imagen con Trivy y bloquea la publicación ante secretos o vulnerabilidades HIGH/CRITICAL.
+- Añade «Preparar release» para generar versión y changelog, y «Publicar release» para publicar el commit comprobado con sus notas, ZIP y SHA-256.
+- Configura Renovate para proponer actualizaciones mediante pull requests, sin fusión automática; la versión informativa de Firefox se obtiene del paquete instalado.
+- Conserva Firefox ESR y las opciones del complemento. La imagen continúa construyéndose en Home Assistant; arquitectura admitida: amd64.
+
 # 0.1.2
 
 - Nombre de la barra lateral abreviado a «Navegador».
