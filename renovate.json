@@ -1,52 +1,104 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "helpers:pinGitHubActionDigests", "docker:pinDigests"],
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests"
+  ],
   "timezone": "Europe/Madrid",
-  "dependencyDashboard": {"enabled": true},
+  "dependencyDashboard": {
+    "enabled": true
+  },
   "automerge": false,
   "rebaseWhen": "behind-base-branch",
   "prConcurrentLimit": 3,
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "commitMessagePrefix": "⬆️",
-  "enabledManagers": ["dockerfile", "github-actions", "npm", "gomod", "custom.regex"],
+  "enabledManagers": [
+    "dockerfile",
+    "github-actions",
+    "npm",
+    "gomod",
+    "custom.regex"
+  ],
   "customManagers": [
     {
       "customType": "regex",
       "description": "Validador de configuración de Renovate",
-      "managerFilePatterns": ["/^\\.github/workflows/ci\\.yaml$/"],
-      "matchStrings": ["renovate@(?<currentValue>[0-9.]+)"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/ci\\.yaml$/"
+      ],
+      "matchStrings": [
+        "renovate@(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "renovate",
       "datasourceTemplate": "npm"
     },
     {
       "customType": "regex",
       "description": "Imagen del navegador cliente de las pruebas",
-      "managerFilePatterns": ["/^tests/integration\\.mjs$/"],
-      "matchStrings": ["(?<depName>mcr\\.microsoft\\.com/playwright):(?<currentValue>[^@'\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "managerFilePatterns": [
+        "/^tests/integration\\.mjs$/"
+      ],
+      "matchStrings": [
+        "(?<depName>mcr\\.microsoft\\.com/playwright):(?<currentValue>[^@'\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "description": "Imagen de Trivy fijada en CI",
-      "managerFilePatterns": ["/^\\.github/workflows/ci\\.yaml$/"],
-      "matchStrings": ["TRIVY_IMAGE: (?<depName>ghcr\\.io/aquasecurity/trivy):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/ci\\.yaml$/"
+      ],
+      "matchStrings": [
+        "TRIVY_IMAGE: (?<depName>ghcr\\.io/aquasecurity/trivy):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
       "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
-      "description": "Firefox ESR del repositorio Alpine utilizado por la imagen",
-      "matchDatasources": ["apk"],
-      "matchFileNames": ["admin_browser/Dockerfile"],
-      "registryUrls": ["https://dl-cdn.alpinelinux.org/alpine?branch=v3.24&components=main,community&arch=x86_64"]
+      "description": "Incluir dependencias Go indirectas, también las criptográficas",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "enabled": true
     },
     {
-      "matchPackageNames": ["playwright", "mcr.microsoft.com/playwright"],
+      "description": "Firefox ESR del repositorio Alpine utilizado por la imagen",
+      "matchDatasources": [
+        "apk"
+      ],
+      "matchFileNames": [
+        "admin_browser/Dockerfile"
+      ],
+      "registryUrls": [
+        "https://dl-cdn.alpinelinux.org/alpine?branch=v3.24&components=main,community&arch=x86_64"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "playwright",
+        "mcr.microsoft.com/playwright"
+      ],
       "groupName": "Playwright y su imagen de pruebas"
     },
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "GitHub Actions"
     }
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/test-results/**",
+    "**/dist/**"
   ]
 }
