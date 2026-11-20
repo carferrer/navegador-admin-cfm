@@ -35,7 +35,7 @@ try {
   const r=spawnSync(docker,['run','--rm','--name',`${name}-runner`,'--network',net,'--ip','172.30.32.2',
     '--shm-size','256m','--mount',`type=bind,source=${root},target=/suite,readonly`,
     '--mount',`type=bind,source=${results},target=/results`,
-    '-w','/suite','mcr.microsoft.com/playwright:v1.58.2-noble@sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d','node','tests/browser-check.mjs'],
+    '-w','/suite','mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579','node','tests/browser-check.mjs'],
     {stdio:'inherit',timeout:240000});
   if(r.status!==0) throw Error('Browser integration checks failed');
   const inspect=JSON.parse(d('inspect',name))[0];
