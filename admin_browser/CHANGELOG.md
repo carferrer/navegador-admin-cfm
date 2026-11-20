@@ -12,7 +12,7 @@
 
 # 0.1.0
 
-- Primera versión local experimental con Firefox/noVNC.
+- Primera versión local con Firefox/noVNC.
 - Acceso por Ingress, lista de administradores y sin puertos publicados.
 - Marcadores, perfil temporal o persistente y restablecimiento explícito.
 - Gestor de intercambio, limpieza configurable y portapapeles de texto.

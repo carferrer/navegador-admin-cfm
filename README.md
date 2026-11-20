@@ -2,7 +2,7 @@
 
 <img src="admin_browser/logo.png" alt="Navegador de administración CFM" width="128" height="128">
 
-Complemento experimental que permite abrir interfaces de administración de red
+Complemento que permite abrir interfaces de administración de red
 en Firefox remoto, accesible mediante Ingress. Versión 0.1.1, arquitectura amd64.
 
 Incluye marcadores configurables, portapapeles de texto y transferencia de

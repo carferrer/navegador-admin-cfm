@@ -12,7 +12,7 @@ ingress: true
 ingress_port: 5800
 ingress_stream: true
 panel_admin: true
-panel_title: Navegador de administración
+panel_title: Navegador
 panel_icon: mdi:web
 host_network: false
 homeassistant_api: false
