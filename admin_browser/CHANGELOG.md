@@ -1,3 +1,9 @@
+# Versión 2026.11.02 (2026-11-20)
+
+- Actualiza la dependencia D-Bus de los servicios web (`github.com/godbus/dbus/v5`) de 5.2.2 a 5.2.4 mediante [Renovate #1](https://github.com/carferrer/navegador-admin-cfm/pull/1).
+- Actualiza Playwright de 1.58.2 a 1.65.1 y su imagen de pruebas Docker a la misma versión, fijada por SHA-256, mediante [Renovate #2](https://github.com/carferrer/navegador-admin-cfm/pull/2).
+- Conserva Firefox ESR 153.7.0, las opciones del complemento y los marcadores configurados; no requiere cambios de configuración.
+
 # Versión 2026.11.01 (2026-11-20)
 
 - Inicia la numeración `AAAA.MM.NN` con la versión `2026.11.01`.
