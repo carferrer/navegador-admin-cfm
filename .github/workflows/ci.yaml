@@ -31,7 +31,7 @@ jobs:
       - run: npm test
       - run: node scripts/release.mjs validate
       - name: Validar configuración de Renovate
-        run: npm exec --yes --package=renovate@44.257.5 -- renovate-config-validator --strict renovate.json
+        run: npm exec --yes --package=renovate@44.257.8 -- renovate-config-validator --strict renovate.json
 
   docker:
     name: Navegador, aislamiento y seguridad
