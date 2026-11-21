@@ -2,7 +2,7 @@ import {releaseCapture} from '../core/util/events.js';
 
 // Local touch controls. Scale through noVNC so its pointer coordinates stay correct.
 export function installMobileZoom(UI) {
-    if (!navigator.maxTouchPoints) return;
+    if (!navigator.maxTouchPoints && !matchMedia('(pointer: coarse)').matches) return;
     const bar = document.createElement('div');
     bar.id = 'cfm-zoom';
     bar.setAttribute('role', 'toolbar');

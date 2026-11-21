@@ -11,7 +11,8 @@ export async function testMobileZoom(origin, pass) {
             page.on('pageerror',e=>errors.push(e.message));
             await page.goto(origin+'/panel');
             const frame = await (await page.waitForSelector('iframe')).contentFrame();
-            await frame.waitForFunction(()=>document.querySelector('#cfm-zoom button')?.disabled===false);
+            try { await frame.waitForFunction(()=>document.querySelector('#cfm-zoom button')?.disabled===false); }
+            catch(e) { console.log('MOBILE DIAGNOSTIC',engine.name(),errors,await frame.evaluate(()=>({touch:navigator.maxTouchPoints,bar:document.querySelector('#cfm-zoom')?.outerHTML,text:document.body.innerText.slice(-2000)})));await page.screenshot({path:'/results/mobile-failure-'+engine.name()+'.png'});throw e; }
             await frame.evaluate(async()=>{
                 const text=[...document.scripts].map(s=>s.textContent).find(s=>s.includes('import UI from'));
                 window.mobileRfb=(await import(text.match(/import UI from "([^"]+)"/)[1])).default.rfb;
