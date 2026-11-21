@@ -125,9 +125,11 @@ try {
   }
   await until(async()=>{
     if(fixture.visits.some(x=>x.url==='/fixture'))return true;
-    await navigate('http://172.30.32.2:9000/fixture');return false;
+    await navigate('http://172.30.32.2:9000/fixture');
+    await delay(1500);return fixture.visits.some(x=>x.url==='/fixture');
   },'remote Firefox navigation after startup');
   await delay(1200);
+  await chord({code:97,name:'KeyA'});
   const sample='Prueba CFM: áéíóú ñ € — texto remoto';
   await remotePaste(sample);await until(()=>fixture.pasted.includes(sample),'clipboard paste into Firefox');
   pass('Manual clipboard: Unicode text from client reaches remote Firefox');
