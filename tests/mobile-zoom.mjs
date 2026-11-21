@@ -45,11 +45,15 @@ export async function testMobileZoom(origin, pass) {
             assert.ok(pan.after>pan.before);assert.equal(pan.events.length,2);
             assert.ok(Math.abs(pan.events[0].x-pan.expected.x)<=1);assert.ok(Math.abs(pan.events[0].y-pan.expected.y)<=1);
             assert.deepEqual(pan.events.map(e=>e.mask),[1,0]);
+            assert.equal(await frame.evaluate(()=>document.captureElement),null);
+            await frame.evaluate(()=>{window.pointerEvents.length=0;touch('touchstart',[[180,200]]);touch('touchcancel',[]);touch('touchend',[]);});
+            assert.equal(await frame.evaluate(()=>pointerEvents.length),0);
             await page.setViewportSize({width:844,height:390});
             await frame.getByRole('button',{name:'Ajustar a pantalla',exact:true}).click();
             const fit=await frame.evaluate(()=>({zoom:document.querySelector('#cfm-zoom').dataset.zoom,width:mobileRfb._canvas.getBoundingClientRect().width,available:mobileRfb._screen.clientWidth,size:[mobileRfb._display.width,mobileRfb._display.height],original:remoteSize}));
             assert.equal(fit.zoom,'1');assert.ok(fit.width<=fit.available+1);assert.deepEqual(fit.size,fit.original);
             assert.deepEqual(errors,[]);
+            await page.screenshot({path:'/results/mobile-'+engine.name()+'.png'});
             pass(engine.name()+': mobile zoom buttons, pinch without remote input, pan, accurate tap, rotation and unchanged remote resolution');
         } finally { await browser.close(); }
     }

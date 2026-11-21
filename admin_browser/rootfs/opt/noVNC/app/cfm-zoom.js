@@ -1,3 +1,5 @@
+import {releaseCapture} from '../core/util/events.js';
+
 // Local touch controls. Scale through noVNC so its pointer coordinates stay correct.
 export function installMobileZoom(UI) {
     if (!navigator.maxTouchPoints) return;
@@ -27,6 +29,7 @@ export function installMobileZoom(UI) {
         let zoom = 1, gesture = null;
         r.resizeSession = false; r.clipViewport = false; r.scaleViewport = true;
         canvas.style.flexShrink = '0';
+        screen.style.height = 'calc(100% - 60px - env(safe-area-inset-bottom, 0px))';
         r._updateScale = () => {
             if (!display.width || !display.height) return;
             display.scale = Math.min(screen.clientWidth / display.width, screen.clientHeight / display.height) * zoom;
@@ -83,7 +86,9 @@ export function installMobileZoom(UI) {
             if (!ts.length) {
                 if (!gesture.moved && gesture.start) {
                     const button = Date.now()-gesture.time > 600 ? 2 : 0;
-                    mouse('mousemove',gesture.start); mouse('mousedown',gesture.start,button); mouse('mouseup',gesture.start,button);
+                    try {
+                        mouse('mousemove',gesture.start); mouse('mousedown',gesture.start,button); mouse('mouseup',gesture.start,button);
+                    } finally { releaseCapture(); }
                 }
                 gesture = null;
             } // Ignore the remaining finger after a pinch until all fingers lift.
