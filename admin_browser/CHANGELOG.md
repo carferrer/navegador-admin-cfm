@@ -1,3 +1,10 @@
+# Versión 2026.11.03 (2026-11-21)
+
+- Añade ampliación local para pantallas táctiles con gestos de dos dedos y botones +, − y Ajustar a pantalla.
+- Permite mover el encuadre ampliado y pulsar conservando las coordenadas, sin cambiar el zoom de Firefox ni la resolución remota.
+- Añade pruebas móviles de Chromium y WebKit para ampliación, desplazamiento, pulsaciones y giro de pantalla.
+- Conserva la configuración y los marcadores. Pendiente de confirmar el comportamiento en Safari y la aplicación HA de un iPhone real.
+
 # Versión 2026.11.02 (2026-11-20)
 
 - Actualiza la dependencia D-Bus de los servicios web (`github.com/godbus/dbus/v5`) de 5.2.2 a 5.2.4 mediante [Renovate #1](https://github.com/carferrer/navegador-admin-cfm/pull/1).

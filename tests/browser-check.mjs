@@ -1,3 +1,4 @@
+import {testMobileZoom} from './mobile-zoom.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
@@ -14,6 +15,11 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(fn,label){for(let i=0;i<120;i++){if(await fn())return;await delay(250);}throw Error('Timeout: '+label);}
 const headers={ 'X-Remote-User-Id':uid,'X-Ingress-Path':prefixes[0].slice(0,-1)};
 await until(async()=>{try{return (await fetch('http://browser:5800/',{headers,signal:AbortSignal.timeout(1000)})).status===200;}catch{return false;}},'container ready');
+// HTTP can be ready before the separate file service accepts WebSockets.
+await until(()=>new Promise(resolve=>{
+  const ws=new WebSocket('ws://browser:5800/ws-filemanager',{headers,handshakeTimeout:1000});
+  ws.once('open',()=>{ws.close();resolve(true);});ws.once('error',()=>resolve(false));
+}),'file service ready');
 for(const h of [{},{'X-Ingress-Path':prefixes[0]},{...headers,'X-Remote-User-Id':'b'.repeat(32)},{...headers,'X-Ingress-Path':'bad'}]){
   assert.equal((await fetch('http://browser:5800/',{headers:h})).status,403);
 }
@@ -117,9 +123,13 @@ try {
     // Type addresses independently of the clipboard feature under test.
     await frame.evaluate(url=>{for(const c of url)window.testUI.rfb.sendKey(c.codePointAt(0));window.testUI.rfb.sendKey(0xff0d,'Enter');},url);
   }
-  await navigate('http://172.30.32.2:9000/fixture');
-  await until(()=>fixture.visits.some(x=>x.url==='/fixture'),'remote Firefox navigation');
+  await until(async()=>{
+    if(fixture.visits.some(x=>x.url==='/fixture'))return true;
+    await navigate('http://172.30.32.2:9000/fixture');
+    await delay(1500);return fixture.visits.some(x=>x.url==='/fixture');
+  },'remote Firefox navigation after startup');
   await delay(1200);
+  await chord({code:97,name:'KeyA'});
   const sample='Prueba CFM: áéíóú ñ € — texto remoto';
   await remotePaste(sample);await until(()=>fixture.pasted.includes(sample),'clipboard paste into Firefox');
   pass('Manual clipboard: Unicode text from client reaches remote Firefox');
@@ -212,6 +222,7 @@ try {
   assert.deepEqual(clientAssets.filter(url=>!prefixes.some(p=>url.startsWith(origin+p)) && !url.startsWith('data:')),[]);
   pass('Client assets requested under Ingress prefix');
   fs.writeFileSync('/results/browser-errors.json',JSON.stringify(errors,null,2));
+  await testMobileZoom(origin,pass);
   await context.close();
 } finally {
   for (const c of browser.contexts()) for (const p of c.pages()) {

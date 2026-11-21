@@ -57,6 +57,25 @@ No hay bloqueo de navegación a esos marcadores: un administrador puede introduc
 cualquier URL alcanzable desde el contenedor. No es un navegador para usuarios
 no confiables ni un entorno de navegación pública aislado por usuario.
 
+## Ampliación en móviles
+
+En dispositivos táctiles aparece una barra con **+**, **−** y **Ajustar a pantalla**.
+La ampliación va de una a cuatro veces el encuadre inicial y solo afecta a ese
+cliente: no cambia el zoom de Firefox ni la resolución del escritorio remoto.
+
+- Separa o junta dos dedos sobre la pantalla remota para ampliar o reducir.
+- Con la vista ampliada, arrastra un dedo para mover el encuadre; toca sin
+  arrastrar para pulsar. Una pulsación de más de 600 ms realiza un clic derecho.
+- En el encuadre ajustado, arrastrar un dedo desplaza el contenido de la web.
+- **Ajustar a pantalla** restaura el encuadre completo. Al reconectar o abrir
+  otro cliente se comienza de nuevo en ese encuadre.
+
+Los gestos se aplican a la pantalla remota; los menús y el teclado conservan sus
+controles habituales. El arrastre táctil se dedica a mover la vista o desplazar
+la página, no a arrastrar objetos remotos. El ratón de escritorio no cambia.
+Las pruebas automáticas incluyen Chromium y WebKit con pantalla táctil simulada;
+la confirmación en Safari y en la aplicación HA de un iPhone real queda pendiente.
+
 ## Portapapeles
 
 La sincronización solo maneja **texto**. Abre HA mediante HTTPS, permite acceso al

@@ -36,7 +36,7 @@ try {
     '--shm-size','256m','--mount',`type=bind,source=${root},target=/suite,readonly`,
     '--mount',`type=bind,source=${results},target=/results`,
     '-w','/suite','mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579','node','tests/browser-check.mjs'],
-    {stdio:'inherit',timeout:240000});
+    {stdio:'inherit',timeout:360000});
   if(r.status!==0) throw Error('Browser integration checks failed');
   const inspect=JSON.parse(d('inspect',name))[0];
   if(Object.keys(inspect.HostConfig.PortBindings||{}).length) throw Error('Published app port');
