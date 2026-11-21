@@ -1,5 +1,5 @@
 name: Navegador de administración
-version: "2026.11.02"
+version: "2026.11.03"
 slug: admin_browser_cfm
 description: Firefox remoto para administrar equipos de red mediante Ingress.
 arch:

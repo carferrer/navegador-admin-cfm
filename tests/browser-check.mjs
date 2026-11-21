@@ -1,3 +1,4 @@
+import {testMobileZoom} from './mobile-zoom.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
@@ -212,6 +213,7 @@ try {
   assert.deepEqual(clientAssets.filter(url=>!prefixes.some(p=>url.startsWith(origin+p)) && !url.startsWith('data:')),[]);
   pass('Client assets requested under Ingress prefix');
   fs.writeFileSync('/results/browser-errors.json',JSON.stringify(errors,null,2));
+  await testMobileZoom(origin,pass);
   await context.close();
 } finally {
   for (const c of browser.contexts()) for (const p of c.pages()) {

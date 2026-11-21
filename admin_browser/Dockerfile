@@ -38,6 +38,8 @@ COPY --from=services-build /out/webservices /opt/base/bin/webservices
 COPY --from=services-build /out/webauth /opt/base/bin/webauth
 COPY --from=nginx-build /out/secure-launch /opt/cfm/secure-launch
 COPY rootfs/ /
+COPY build/install-zoom.mjs /opt/cfm/install-zoom.mjs
+RUN node /opt/cfm/install-zoom.mjs
 RUN chmod 755 /opt/cfm/entrypoint.sh /etc/services.d/xvnc/params
 ENV USER_ID=1000 GROUP_ID=1000 UMASK=0077 \
     WEB_LISTENING_PORT=5800 VNC_LISTENING_PORT=-1 \
