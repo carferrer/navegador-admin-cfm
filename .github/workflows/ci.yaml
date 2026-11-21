@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+  schedule:
+    - cron: '23 5 * * 1' # Lunes, 05:23 UTC; revisión completa sin publicación
   workflow_dispatch:
   workflow_call:
     inputs:

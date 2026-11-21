@@ -44,8 +44,16 @@ GitHub Actions comprueba las propuestas y las publicaciones: construye la
 imagen, prueba el navegador y analiza fuentes e imagen con Trivy. Las
 vulnerabilidades HIGH/CRITICAL y los secretos detectados bloquean la release.
 El informe de imagen conserva también los hallazgos de menor gravedad.
-Consultar [el proceso de versiones](RELEASING.md). No hay vigilancia periódica
-programada; los análisis se ejecutan al cambiar el código o lanzar los flujos.
+Consultar [el proceso de versiones](RELEASING.md). La CI completa se ejecuta también los lunes a las 05:23 UTC, con una
+construcción limpia y la base de vulnerabilidades disponible en ese momento.
+Esta ejecución programada no integra cambios ni publica releases. Los resultados
+y fallos se consultan en GitHub Actions; las notificaciones dependen de las
+preferencias de GitHub de cada usuario.
+
+Renovate mantiene desactivada la integración automática. Los archivos de fuentes
+de nginx y su módulo WebSocket, y los servicios copiados de terceros, requieren
+propuestas que incluyan sus fuentes, hashes, licencias y revisión de nuestras
+modificaciones; cambiar solo sus números de versión no es suficiente.
 
 ## Información que no debe publicarse
 
